@@ -1,14 +1,3 @@
-# Estágio de construção
-FROM composer:2.6 AS builder
-
-WORKDIR /app
-COPY . .
-RUN composer install --no-dev --optimize-autoloader --no-interaction
-
-# Estágio final - Usando imagem oficial php-apache
-FROM php:8.2-apache
-
-# Instala dependências necessárias para extensões PHP
 # Use a imagem oficial do PHP com Apache
 FROM php:8.2-apache
 
