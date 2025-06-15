@@ -1,26 +1,25 @@
 FROM php:8.2-apache
 
-WORKDIR /var/www/html
-
 # Instala dependências
 RUN apt-get update && apt-get install -y \
     libzip-dev \
     zip \
-    unzip \
-    && docker-php-ext-install pdo pdo_mysql zip
+    && docker-php-ext-install \
+    mysqli \
+    pdo \
+    pdo_mysql \
+    && docker-php-ext-enable pdo_mysql
 
-# Instala Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Habilita mod_rewrite do Apache
+# Configura Apache
 RUN a2enmod rewrite
+COPY .htaccess /var/www/html/.htaccess
 
-# Copia os arquivos do projeto
+# Copia a aplicação
+WORKDIR /var/www/html
 COPY . .
 
-# Instala dependências do PHP (se for Laravel ou similar)
-RUN if [ -f "composer.json" ]; then composer install --no-dev --optimize-autoloader; fi
+# Permissões
+RUN chown -R www-data:www-data /var/www/html
 
-# Ajusta permissões
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage
+EXPOSE 80
+CMD ["apache2-foreground"]
