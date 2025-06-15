@@ -1,0 +1,123 @@
+/* Reset e base */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #e9f5e1; /* verde claro */
+  color: #333;
+}
+
+/* Container centralizado */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Caixa de login */
+.login-box {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 100, 0, 0.15);
+  padding: 30px 25px;
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+}
+
+/* Logo do site */
+.site-logo {
+  max-width: 100px;
+  margin: 0 auto 10px;
+}
+
+/* Nome do sistema */
+.logo {
+  font-size: 30px;
+  margin-bottom: 5px;
+  color: #4a7c2d; /* verde escuro */
+  font-weight: bold;
+}
+.logo span {
+  color: #8b5e3c; /* marrom */
+}
+
+/* Título do formulário */
+h2 {
+  margin-bottom: 20px;
+  color: #4a4a4a;
+  font-size: 20px;
+}
+
+/* Estilo do formulário */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* Botão de login */
+button {
+  background-color: #4a7c2d;
+  color: #fff;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #3e6524;
+}
+
+/* Link de recuperação */
+.forgot-password {
+  display: block;
+  margin-top: 12px;
+  font-size: 0.9em;
+  color: #8b5e3c;
+  text-decoration: none;
+}
+.forgot-password:hover {
+  text-decoration: underline;
+}
+
+/* Área de usuários para teste */
+.test-users {
+  background-color: #f8f5f0;
+  margin-top: 25px;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 0.9em;
+  text-align: left;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+/* Rodapé (opcional) */
+footer {
+  position: fixed;
+  bottom: 10px;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-size: 13px;
+  color: #666;
+  background-color: transparent;
+  z-index: 10;
+}
+
+
+
