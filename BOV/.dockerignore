@@ -1,5 +1,10 @@
 .git/
 node_modules/
 vendor/
-*.log
 .env
+docker-compose.yml
+*.log
+*.md
+*.sql
+/db_init/
+/storage/logs/

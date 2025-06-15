@@ -1,25 +1,44 @@
+# Estágio de construção
+FROM composer:2.6 AS builder
+
+WORKDIR /app
+COPY . .
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+# Estágio final
 FROM php:8.2-apache
 
 # Instala dependências
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && \
+    apt-get install -y \
     libzip-dev \
     zip \
     && docker-php-ext-install \
     mysqli \
     pdo \
     pdo_mysql \
-    && docker-php-ext-enable pdo_mysql
+    && docker-php-ext-enable pdo_mysql \
+    && rm -rf /var/lib/apt/lists/*
 
 # Configura Apache
-RUN a2enmod rewrite
+RUN a2enmod rewrite && \
+    a2enmod headers
+
+# Copia arquivos do estágio builder
+COPY --from=builder /app /var/www/html
 COPY .htaccess /var/www/html/.htaccess
 
-# Copia a aplicação
+# Configura permissões
+RUN chown -R www-data:www-data /var/www/html && \
+    chmod -R 755 /var/www/html/storage
+
+# Variáveis de ambiente
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+
+# Configura Apache para usar pasta public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf && \
+    sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+
 WORKDIR /var/www/html
-COPY . .
-
-# Permissões
-RUN chown -R www-data:www-data /var/www/html
-
 EXPOSE 80
 CMD ["apache2-foreground"]
