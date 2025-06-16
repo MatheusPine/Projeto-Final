@@ -1,20 +1,28 @@
+# Use a imagem oficial do PHP com Apache
 FROM php:8.2-apache
+
+# Configuração CRÍTICA do Apache
+RUN echo "<Directory /var/www/html/public>" > /etc/apache2/conf-available/public.conf && \
+    echo "    Options FollowSymLinks" >> /etc/apache2/conf-available/public.conf && \
+    echo "    AllowOverride All" >> /etc/apache2/conf-available/public.conf && \
+    echo "    Require all granted" >> /etc/apache2/conf-available/public.conf && \
+    echo "</Directory>" >> /etc/apache2/conf-available/public.conf && \
+    a2enconf public && \
+    a2enmod rewrite
 
 # Cria a estrutura de diretórios
 RUN mkdir -p /var/www/html/public
 
-# Configura o Apache
-ENV APACHE_DOCUMENT_ROOT /var/www/html/public
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
-RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
-
-# Copia os arquivos
+# Copia APENAS a pasta pública
 COPY ./public/ /var/www/html/public/
-COPY ./.htaccess /var/www/html/public/
 
-# Permissões
-RUN chown -R www-data:www-data /var/www/html
-RUN chmod -R 755 /var/www/html/public
+# Configura permissões (otimizado para Windows)
+RUN chown -R www-data:www-data /var/www/html && \
+    find /var/www/html -type d -exec chmod 755 {} \; && \
+    find /var/www/html -type f -exec chmod 644 {} \;
 
-# Habilita módulos
-RUN a2enmod rewrite
+# Porta exposta
+EXPOSE 80
+
+# Comando de inicialização
+CMD ["apache2-foreground"]
