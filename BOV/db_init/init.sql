@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS gado (
     identificacao VARCHAR(50) UNIQUE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+);
 
 CREATE TABLE IF NOT EXISTS vacinas (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -25,4 +25,17 @@ CREATE TABLE IF NOT EXISTS vacinas (
     observacoes TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (id_gado) REFERENCES gado(id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+);
+
+CREATE TABLE IF NOT EXISTS usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    senha VARCHAR(255) NOT NULL,
+    tipo ENUM('admin','veterinario','fazendeiro') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Dados iniciais
+INSERT IGNORE INTO usuarios (email, senha, tipo) VALUES
+('admin@agro.com', SHA2('Admin123#', 256), 'admin'),
+('vet@agro.com', SHA2('Vet123#', 256), 'veterinario');
