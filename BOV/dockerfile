@@ -14,6 +14,15 @@ COPY public/ /var/www/html/
 RUN chown -R www-data:www-data /var/www/html && \
     chmod -R 755 /var/www/html
 
+    # ADICIONE ESTA PARTE - Configurar permissões de diretório
+
+RUN echo '<Directory /var/www/html/public>\n\
+    Options Indexes FollowSymLinks\n\
+    AllowOverride All\n\
+    Require all granted\n\
+    DirectoryIndex index.php index.html\n\
+</Directory>' >> /etc/apache2/apache2.conf
+
 # Configura o DocumentRoot do Apache para /var/www/html
 ENV APACHE_DOCUMENT_ROOT /var/www/html
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
