@@ -1,0 +1,26 @@
+services:
+  web:
+    build: .
+    container_name: bov-web
+    ports:
+      - "8000:80"
+    volumes:
+      - type: bind
+        source: .
+        target: /var/www/html
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.0
+    container_name: bov-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: bovdb
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: unless-stopped
+
+volumes:
+  db_data:
