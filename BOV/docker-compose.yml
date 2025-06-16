@@ -1,38 +1,38 @@
+version: '3.8'
 
 services:
-  app:
-    build: .
+  web:
+    image: php:8.2-apache
+    container_name: bov-web
     ports:
-      - "80:80"
+      - "8081:80"
     volumes:
-      - .:/var/www/html
-    depends_on:
-      db:
-        condition: service_healthy
+      - ./:/var/www/html
     environment:
-      DB_HOST: db
-      DB_DATABASE: laravel
-      DB_USERNAME: usuario
-      DB_PASSWORD: senha
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+    depends_on:
+      - db
+    restart: unless-stopped
 
   db:
     image: mysql:8.0
-    command: --default-authentication-plugin=mysql_native_password
-    restart: always
+    container_name: bov-db
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: laravel
-      MYSQL_USER: usuario
-      MYSQL_PASSWORD: senha
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: unless-stopped
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
       interval: 5s
-      timeout: 10s
       retries: 10
-    volumes:
-      - mysql_data:/var/lib/mysql
-    ports:
-      - "3306:3306"
 
 volumes:
-  mysql_data:
+  db_data:
