@@ -1,24 +1,12 @@
 FROM php:8.2-apache
 
-# Instala dependências
 RUN apt-get update && apt-get install -y \
     libzip-dev \
     zip \
     && docker-php-ext-install mysqli pdo pdo_mysql zip
 
-# Habilita mod_rewrite
 RUN a2enmod rewrite
 
-# Cria diretório e configura permissões
-RUN mkdir -p /var/www/html/storage && \
-    chown -R www-data:www-data /var/www/html && \
-    chmod -R 755 /var/www/html/storage
-
-# Copia arquivos da aplicação
-COPY . /var/www/html/
-
-# Porta exposta
-EXPOSE 80
-
-# Comando de inicialização
-CMD ["apache2-foreground"]
+COPY start.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/start.sh
+CMD ["start.sh"]

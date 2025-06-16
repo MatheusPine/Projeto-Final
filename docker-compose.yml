@@ -1,15 +1,14 @@
-version: '3.8'
-
 services:
   web:
-    image: php:8.2-apache
+    build: .
     container_name: bov-web
     ports:
-      - "8080:80"
+      - "8000:80"
     volumes:
-      - ./:/var/www/html
-    depends_on:
-      - db
+      - type: bind
+        source: .
+        target: /var/www/html
+    restart: unless-stopped
 
   db:
     image: mysql:8.0
@@ -17,12 +16,11 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: bovdb
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
+    ports:
+      - "3307:3306"
     volumes:
       - db_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+    restart: unless-stopped
 
 volumes:
   db_data:
