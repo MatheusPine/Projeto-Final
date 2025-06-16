@@ -1,8 +1,5 @@
-app = "projeto-final-etu0ww"  # Substitua pelo nome do seu app no Fly.io
+app = "projeto-final-etu0ww"  # Nome exato do seu app no Fly.io
 
 [http_service]
-  internal_port = 80
-  force_https = true  # Redireciona HTTP para HTTPS
-
-[build]
-  dockerfile = "Dockerfile"
+  internal_port = 80  # Porta que o Apache está usando
+  force_https = true  # Redireciona HTTP → HTTPS
