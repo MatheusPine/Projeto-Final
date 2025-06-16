@@ -1,15 +1,8 @@
-app = "projeto-final-etu0ww"
-
-[build]
-  builder = "paketobuildpacks/builder:base"
-  buildpacks = ["gcr.io/paketo-buildpacks/php-apache"]
-
-[env]
-  APACHE_DOCUMENT_ROOT = "/var/www/html/public"
-  APACHE_RUN_USER = "www-data"
-  APACHE_RUN_GROUP = "www-data"
+app = "https://projeto-final-etu0ww.fly.dev"  # Substitua pelo nome do seu app no Fly.io
 
 [http_service]
   internal_port = 80
-  force_https = true
-  auto_stop_machines = false
+  force_https = true  # Redireciona HTTP para HTTPS
+
+[build]
+  dockerfile = "Dockerfile"

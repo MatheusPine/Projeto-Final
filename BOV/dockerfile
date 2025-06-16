@@ -1,28 +1,31 @@
 # Use a imagem oficial do PHP com Apache
+# Use a imagem oficial do Apache com PHP
 FROM php:8.2-apache
 
-# Configuração CRÍTICA do Apache
-RUN echo "<Directory /var/www/html/public>" > /etc/apache2/conf-available/public.conf && \
-    echo "    Options FollowSymLinks" >> /etc/apache2/conf-available/public.conf && \
-    echo "    AllowOverride All" >> /etc/apache2/conf-available/public.conf && \
-    echo "    Require all granted" >> /etc/apache2/conf-available/public.conf && \
-    echo "</Directory>" >> /etc/apache2/conf-available/public.conf && \
-    a2enconf public && \
-    a2enmod rewrite
+# Define o diretório de trabalho
+WORKDIR /var/www/html
 
-# Cria a estrutura de diretórios
-RUN mkdir -p /var/www/html/public
+# Habilita o mod_rewrite (necessário para rotas em frameworks como Laravel)
+RUN a2enmod rewrite
 
-# Copia APENAS a pasta pública
-COPY ./public/ /var/www/html/public/
+# Instala extensões PHP comuns (ajuste conforme necessário)
+RUN docker-php-ext-install pdo pdo_mysql
 
-# Configura permissões (otimizado para Windows)
+# Copia todos os arquivos do projeto para o container
+COPY . .
+
+# Define o DocumentRoot do Apache para /var/www/html/public
+# (Substitua /public pelo diretório correto do seu projeto)
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+
+# Ajusta permissões (evita erro 403)
 RUN chown -R www-data:www-data /var/www/html && \
-    find /var/www/html -type d -exec chmod 755 {} \; && \
-    find /var/www/html -type f -exec chmod 644 {} \;
+    chmod -R 755 /var/www/html
 
-# Porta exposta
+# Expõe a porta 80 (HTTP)
 EXPOSE 80
 
-# Comando de inicialização
+# Comando padrão: inicia o Apache
 CMD ["apache2-foreground"]

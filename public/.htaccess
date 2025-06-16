@@ -1,18 +1,7 @@
 <IfModule mod_rewrite.c>
-    Options -Indexes +FollowSymLinks
     RewriteEngine On
     RewriteBase /
-    
-    # Redireciona tudo para index.php
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^ index.php [QSA,L]
-    
-    # Permissões
-    Require all granted
+    RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
 </IfModule>
-
-# Bloqueia acesso a arquivos sensíveis
-<FilesMatch "\.(env|log|htaccess)$">
-    Require all denied
-</FilesMatch>
