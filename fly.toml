@@ -1,4 +1,4 @@
-app = "https://projeto-final-etu0ww.fly.dev"  # Substitua pelo nome do seu app no Fly.io
+app = "projeto-final-etu0ww"  # Substitua pelo nome do seu app no Fly.io
 
 [http_service]
   internal_port = 80
